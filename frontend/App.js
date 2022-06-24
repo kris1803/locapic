@@ -39,8 +39,10 @@ let TabNavigator = (props) => {
       tabBarInactiveTintColor: '#fff',
       tabBarStyle: {
         backgroundColor: '#130f40',
-        padding: 5,
-        paddingBottom: 5,
+        paddingTop: 7,
+        height: '6.5%',
+        minHeight: 52,
+        paddingBottom: 7
       }
     })}
     >

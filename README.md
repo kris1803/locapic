@@ -30,4 +30,13 @@ npm start
 ```
 
 Pour tester l'app depuis un téléphone, scanner le qr code du terminal 1, pour l'ouvrir avec Expo Go.
+
+## Architecture
+
+Stack technique:
+
+Frontend: React Native, Expo, Redux, React Native Elements, React Navigation, Async Storage, Socket.io
+
+Backend: Nodejs, Express, Websockets
+
 ![screenshot](/backend/public/images/locapic.webp?raw=true)

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useIsFocused } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
    container: {
@@ -20,18 +20,20 @@ const styles = StyleSheet.create({
       color: '#fff',
       height: 50,
       backgroundColor: '#555',
-      opacity: 0.5,
+      opacity: 0.7,
       padding: 5,
+      borderTopRightRadius: 5,
+      borderTopLeftRadius: 5
    }
 });
 
 function HomeScreen(props) {
    const [pseudo, setPseudo] = useState('');
    const [alreadyLogin, setAlreadyLogin] = useState(false);
-   const [mounted, setMounted] = useState(false);
+   const mounted = useIsFocused();
+
 
    useEffect(() => {
-      setMounted(true);
       AsyncStorage.getItem('user').then(user => {
          if (user) {
             setPseudo(JSON.parse(user).pseudo);
@@ -40,12 +42,12 @@ function HomeScreen(props) {
          } else {
             setAlreadyLogin(false);
          }
+      }).catch((err) => {
+         console.log(err);
       });
 
       return () => {
-         setMounted(false);
-         setAlreadyLogin(false);
-         setPseudo('')
+         
       }
    }, [] );
 
@@ -55,9 +57,8 @@ function HomeScreen(props) {
          await AsyncStorage.setItem('user', JSON.stringify({ pseudo }));
          props.setUser({ pseudo });
          props.navigation.navigate('Login');
-         setMounted(false);
       } else {
-         Alert.alert('Error.','Please enter a pseudo');
+         Alert.alert('Error.','Please enter username.');
       }
    }
 
@@ -65,8 +66,8 @@ function HomeScreen(props) {
    return (
       <ImageBackground source={require('../assets/home.jpg')} style={styles.backgroundImg} >
          <View style={styles.container}>
-            <Input placeholder={'Username here...'} style={styles.textInput} value={pseudo} onChangeText={(value) => setPseudo(value)} />
-            <Button onPress={() => buttonHandlePress()} title={' Go To map '} icon={<Ionicons name="enter" size={24} color={"white"} />} iconRight />
+            <Input placeholder={'Enter username...'} inputStyle={styles.textInput} value={pseudo} onChangeText={(value) => setPseudo(value)} />
+            <Button onPress={() => buttonHandlePress()} title={' Next '} icon={<Ionicons name="enter" size={24} color={"white"} />} iconRight />
 
             <StatusBar style="auto" />
          </View>
@@ -76,8 +77,8 @@ function HomeScreen(props) {
       return (
          <ImageBackground source={require('../assets/home.jpg')} style={styles.backgroundImg} >
             <View style={styles.container}>
-               <Text>Welcome {pseudo}</Text>
-               <Button onPress={() => props.navigation.navigate('Login')} title={' Go To map '} icon={<Ionicons name="enter" size={24} color={"white"} />} iconRight />
+               <Text style={{ fontSize: 20, marginBottom:'5%', backgroundColor: '#eee', padding: 5, borderRadius:5 }} >Welcome, {pseudo}</Text>
+               <Button onPress={() => props.navigation.navigate('Login')} title={' Next '} icon={<Ionicons name="enter" size={24} color={"white"} />} iconRight />
             
             <StatusBar style="auto" />
             </View>

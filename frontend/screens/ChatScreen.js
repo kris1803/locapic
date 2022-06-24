@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import { ListItem, Button, Input } from '@rneui/themed';
 import { connect } from 'react-redux';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -16,21 +16,25 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     msgContainer: {
-        margin: 10,
-        marginTop: 40,
+        marginTop: 10,
         backgroundColor: '#fff',
+        borderBottomWidth: 1, 
+        borderBottomColor: '#ccc',
     },
     sendContainer: {
-        margin: 10,
+        margin: '2%',
     }
 });
 
 function ChatScreen(props) {
-    var socket = socketIOClient(BACKEND_URL);
+    let socket = socketIOClient(BACKEND_URL);
     const [currentMessage, setCurrentMessage] = useState('');
     const [listMessage, setListMessage] = useState([]);
 
     let handleButtonPress = () => {
+        if (currentMessage.length === 0) {
+            return;
+        }
         let msg = {
             content: currentMessage,
             user: props.user.pseudo,
@@ -40,6 +44,9 @@ function ChatScreen(props) {
     }
     useEffect(() => {
         socket.on('sendMessageToAll', function(message) {
+            if(!message) {
+                return;
+            }
             let mymsg = {
                 content: message.content,
                 user: message.user,
@@ -67,9 +74,10 @@ function ChatScreen(props) {
                             
                         </ListItem>
                     ))}
+                    {listMessage.length === 0 && (<Text style={{ textAlign: 'center', fontSize: 18, marginTop: '4%' }}>Messages will appear here...</Text>)}
                 </ScrollView>
                 <View style={styles.sendContainer} >
-                    <Input placeholder={'Message...'} value={currentMessage} onChangeText={(text) => setCurrentMessage(text)} />
+                    <Input placeholder={'Message...'} style={{ padding:0 }} value={currentMessage} onChangeText={(text) => setCurrentMessage(text)} />
                     <Button buttonStyle={{ backgroundColor: '#eb4d4b' }} title={'Send'} onPress={() => handleButtonPress()} />
                 </View>
             </View>
