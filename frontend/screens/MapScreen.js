@@ -57,7 +57,7 @@ function MapScreen(props) {
       (async () => {
          let { status } = await Location.requestForegroundPermissionsAsync();
          if (status !== 'granted') {
-            Alert.alert('Fatal error.','Permission to access location was denied');
+            Alert.alert('Fatal error.', 'Permission to access location was denied');
             return;
          }
 
@@ -75,9 +75,9 @@ function MapScreen(props) {
                if (data) {
                   let pois = JSON.parse(data);
                   console.log('pois length is ', pois.length)
-                  for (let i=0; i<pois.length; i++) {
+                  for (let i = 0; i < pois.length; i++) {
                      props.addPoi(pois[i]);
-                     
+
                   }
                   setListPOI(pois);
                }
@@ -87,7 +87,7 @@ function MapScreen(props) {
       Alert.alert("Welcome", props.user.pseudo)
 
       return async () => {
-         if(watcher) {
+         if (watcher) {
             await watcher.remove();
          }
       }
@@ -99,10 +99,10 @@ function MapScreen(props) {
       let newMarkers = [];
       if (listPOI.length !== 0) {
          let lastCoords = newCoords[newCoords.length - 1];
-         for (let i=0; i<newCoords.length; i++) {
+         for (let i = 0; i < newCoords.length; i++) {
             newMarkers.push(<Marker key={i} coordinate={{ latitude: newCoords[i].latitude, longitude: newCoords[i].longitude }} pinColor={'blue'} title={newCoords[i].title} description={newCoords[i].description} />)
          }
-         
+
       }
       setAddPOI(false);
       setMarkers(newMarkers);
@@ -129,7 +129,7 @@ function MapScreen(props) {
          AsyncStorage.getItem('pois').then((value) => {
             if (value !== null) {
                let pois = JSON.parse(value);
-               for (let i=0; i<pois.length; i++) {
+               for (let i = 0; i < pois.length; i++) {
                   props.addPoi(pois[i]);
                }
                pois.push(poiToSave);
@@ -150,40 +150,40 @@ function MapScreen(props) {
    }
 
    return (
-      <SafeAreaView style={{flex:1}}>
-      <View style={styles.container} >
-         <MapView style={styles.map}
-            initialRegion={{
-               latitude: 48.866667,
-               longitude: 2.333333,
-               latitudeDelta: 0.0922,
-               longitudeDelta: 0.0421,
-            }}
-            onPress={(e) => handleMapPress(e)}
-         >
-            <Marker coordinate={{ latitude: location.coords.latitude, longitude: location.coords.longitude }}
-               title="Hello"
-               description="I am here"
-               draggable  // Rendre le marqueur drag & dropable
-               opacity={0.8}  // Modifier l'opacité
-            />
-            {markers}
-         </MapView>
-         <Overlay isVisible={visible} onBackdropPress={() => { toggleOverlay(); setAddPOI(false) }} overlayStyle={{ width: '80%' }}>
-            <Text style={{ textAlign: 'center', fontSize: 18 }}>Mettez les informations.</Text>
-            <Input placeholder="Title" style={{ width: '100%' }} value={title} onChangeText={(text) => setTitle(text)} />
-            <Input placeholder="Description" style={{ width: '100%' }} onChangeText={(text) => setDescription(text)} />
-            <Button
-               title="Place on map"
-               onPress={() => { toggleOverlay(); handleConfirmButton() }}
-               inputStyle={{ width: '100%', flex: 1 }}
+      <SafeAreaView style={{ flex: 1 }}>
+         <View style={styles.container} >
+            <MapView style={styles.map}
+               initialRegion={{
+                  latitude: 48.866667,
+                  longitude: 2.333333,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+               }}
+               onPress={(e) => handleMapPress(e)}
+            >
+               <Marker coordinate={{ latitude: location.coords.latitude, longitude: location.coords.longitude }}
+                  title="Hello"
+                  description="I am here"
+                  draggable  // Rendre le marqueur drag & dropable
+                  opacity={0.8}  // Modifier l'opacité
+               />
+               {markers}
+            </MapView>
+            <Overlay isVisible={visible} onBackdropPress={() => { toggleOverlay(); setAddPOI(false) }} overlayStyle={{ width: '80%' }}>
+               <Text style={{ textAlign: 'center', fontSize: 18 }}>Mettez les informations.</Text>
+               <Input placeholder="Title" style={{ width: '100%' }} value={title} onChangeText={(text) => setTitle(text)} />
+               <Input placeholder="Description" style={{ width: '100%' }} onChangeText={(text) => setDescription(text)} />
+               <Button
+                  title="Place on map"
+                  onPress={() => { toggleOverlay(); handleConfirmButton() }}
+                  inputStyle={{ width: '100%', flex: 1 }}
 
-            />
-         </Overlay>
-         <View style={styles.buttonContainer}>
-            <Button title={'Add POI '} disabled={addPOI} buttonStyle={styles.button} iconRight icon={<Foundation name="marker" size={24} color="white" />} onPress={() => buttonHandlePress()} />
+               />
+            </Overlay>
+            <View style={styles.buttonContainer}>
+               <Button title={'Add POI '} disabled={addPOI} buttonStyle={styles.button} iconRight icon={<Foundation name="marker" size={24} color="white" />} onPress={() => buttonHandlePress()} />
+            </View>
          </View>
-      </View>
       </SafeAreaView>
    );
 }
